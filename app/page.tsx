@@ -20,10 +20,10 @@ import {
     HiUser,
     HiViewBoards,
 } from "react-icons/hi";
-import Header from "./components/header";
-import Sidebar from "./components/sidebar";
+import Header from "../components/header";
+import Sidebar from "../components/sidebar";
 import {SidebarProvider} from "./context/SidebarContext";
-import {AlertFunction} from "@/app/components/Alert";
+import {AlertFunction} from "@/components/Alert";
 
 export default function Index(): JSX.Element {
     return (
@@ -61,7 +61,7 @@ function ActualSidebar(): JSX.Element {
                     <Sidebar.Item href="#" icon={HiShoppingBag}>
                         Products
                     </Sidebar.Item>
-                    <Sidebar.Item href="#" icon={HiArrowSmRight}>
+                    <Sidebar.Item href="/login" icon={HiArrowSmRight}>
                         Sign In
                     </Sidebar.Item>
                     <Sidebar.Item href="#" icon={HiTable}>
