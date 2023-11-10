@@ -1,5 +1,6 @@
 'use client'
 import {Button, Card, Checkbox, Label, TextInput} from "flowbite-react";
+import Link from "next/link";
 
 export default function SignUpPage() {
     return (
@@ -57,9 +58,9 @@ export default function SignUpPage() {
                     </div>
                     <p className="text-sm text-gray-500 dark:text-gray-300">
                         Already have account?&nbsp;
-                        <a href="/login" className="text-primary-600 dark:text-primary-300">
+                        <Link href={'/login'} className="text-primary-600 dark:text-primary-300">
                             Sign in here
-                        </a>
+                        </Link>
                     </p>
                 </form>
 
