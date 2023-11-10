@@ -1,13 +1,23 @@
+'use client'
+import React, {FC, useEffect, useState} from "react";
 import {Navbar} from "flowbite-react";
-import {FC} from "react";
+import {BiChevronRightCircle} from "react-icons/bi";
 import {useSidebarContext} from "@/app/context/SidebarContext";
-import {BiBuoy, BiChevronLeftCircle} from "react-icons/bi";
-import {Button} from "flowbite-react";
-import image from '@/public/logo.png'
 
 const Header: FC<Record<string, never>> = function () {
-    const {isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens} =
-        useSidebarContext();
+    const {isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens} = useSidebarContext();
+    const [isSmall, setIsSmall] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
+    useEffect(() => {
+        function handleResize() {
+            setIsSmall(typeof window !== 'undefined' && window.innerWidth < 768);
+        }
+        if (typeof window !== 'undefined') {
+            window.addEventListener("resize", handleResize);
+            return () => {
+                window.removeEventListener("resize", handleResize);
+            };
+        }
+    }, []);
 
     return (
         <header className="sticky top-0 z-20">
@@ -21,68 +31,47 @@ const Header: FC<Record<string, never>> = function () {
 
                     >
                         {isOpenOnSmallScreens ? (
-                            <svg
-                                className="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clipRule="evenodd"
-                                ></path>
-                            </svg>
+                            <BiChevronRightCircle />
                         ) : (
-                            <svg
-                                className="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                    clipRule="evenodd"
-                                ></path>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" fill="white"/>
+                                <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" stroke="#F1F2F2"/>
+                                <path d="M14 16L10 12L14 8" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         )}
                     </button>
                 )}
                 <Navbar.Brand>
                     {
-                        !isOpenOnSmallScreens && (
-                            <button>
-                                <svg
-                                    className="h-6 w-6"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                        clipRule="evenodd"
-                                    ></path>
+                        !isSmall && (
+                            <button
+                                style={{ marginLeft: '-30px' }}
+                                onClick={() => setOpenOnSmallScreens(!isOpenOnSmallScreens)}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" fill="white"/>
+                                    <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" stroke="#F1F2F2"/>
+                                    <path d="M14 16L10 12L14 8" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
+
                             </button>
                         )
+
                     }
 
-                    <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">
+                    <span className="self-center whitespace-nowrap px-5 text-xl font-semibold dark:text-white">
                         Home
                     </span>
                 </Navbar.Brand>
-          {/*      <div className="flex md:order-2">*/}
-          {/*          <Navbar.Brand>*/}
-          {/*              <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">*/}
-          {/*  Home*/}
-          {/*</span>*/}
-          {/*              <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">*/}
-          {/*                  Home*/}
-          {/*              </span>*/}
-          {/*          </Navbar.Brand>*/}
-          {/*      </div>*/}
+                {/*      <div className="flex md:order-2">*/}
+                {/*          <Navbar.Brand>*/}
+                {/*              <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">*/}
+                {/*  Home*/}
+                {/*</span>*/}
+                {/*              <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">*/}
+                {/*                  Home*/}
+                {/*              </span>*/}
+                {/*          </Navbar.Brand>*/}
+                {/*      </div>*/}
             </Navbar>
         </header>
     );

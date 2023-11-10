@@ -1,6 +1,7 @@
 "use client";
 import React, {useState} from "react";
-
+import { Avatar } from 'flowbite-react';
+import logo from '@/public/static/logo.png'
 import {
     HiArrowSmRight,
     HiChartPie,
@@ -16,10 +17,14 @@ import Sidebar from "@/components/sidebar";
 import {SidebarProvider} from "./context/SidebarContext";
 import {AlertFunction} from "@/components/Alert";
 import Link from "next/link";
+import AdminLayout from "@/components/layouts/adminLayout";
 
-export default function Index(): JSX.Element {
+type ChildProps =  {
+    children: React.ReactNode;
+}
+const Index: React.FC<ChildProps> = ({ children }) => {
     return (
-        <SidebarProvider>
+        <AdminLayout>
             <div className="flex">
                 <div className="order-1">
                     <ActualSidebar/>
@@ -32,14 +37,22 @@ export default function Index(): JSX.Element {
                 </div>
 
             </div>
-        </SidebarProvider>
+        </AdminLayout>
     );
 }
 
-function ActualSidebar(): JSX.Element {
+export function ActualSidebar(): JSX.Element {
     return (
         <Sidebar aria-label="Sidebar with multi-level dropdown example">
+
             <Sidebar.Items>
+               <Sidebar.Logo>
+                   <img
+                       alt=""
+                       src="/static/logo.png"
+                       className="mr-1 h-6 w-full sm:h-8 text-center justify-center"
+                   />
+               </Sidebar.Logo>
                 <Sidebar.ItemGroup>
                     <Sidebar.Item href="#" icon={HiChartPie}>
                         Dashboard
@@ -85,10 +98,15 @@ function HomePage() {
                 <header>
                     <h2 className="mb-3 text-4xl font-bold dark:text-gray-200">Alert</h2>
                 </header>
+                <img
+                    alt=""
+                    src="../public/next.svg"
+                    className="mr-1 h-6 sm:h-8"
+                />
                 <AlertFunction/>
             </section>
         </div>
     );
 }
 
-
+export  default Index

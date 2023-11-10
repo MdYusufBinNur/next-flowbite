@@ -8,6 +8,7 @@ interface SidebarContextProps {
   isPageWithSidebar: boolean;
   // eslint-disable-next-line no-unused-vars
   setOpenOnSmallScreens: (isOpen: boolean) => void;
+  isSmallScreen: () => boolean;
 }
 
 const SidebarContext = createContext<SidebarContextProps>(undefined!);
@@ -48,6 +49,7 @@ export function SidebarProvider({
         isOpenOnSmallScreens: isOpen,
         isPageWithSidebar: true,
         setOpenOnSmallScreens: setOpen,
+        isSmallScreen: isSmallScreen,
       }}
     >
       {children}

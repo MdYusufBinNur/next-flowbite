@@ -1,12 +1,19 @@
 'use client'
 import {Button, Card, Checkbox, Label, TextInput, Spinner, Toast} from "flowbite-react";
 
-import {useState} from "react";
+
+import {SyntheticEvent, useState} from "react";
 import {signIn} from "next-auth/react";
-import {useRouter} from "next/router";
+
+import {login} from "@/components/api/http/login";
+import {TokenUser} from "@/common/types/login.type";
+import Link from "next/link";
+import {redirect} from "next/navigation";
+
+import {useRouter} from "next/navigation";
 
 const LoginForm = () => {
-    const router = useRouter;
+    const router = useRouter();
     let loading = false
     const [showLoading, setShowLoading] = useState(false);
     const [showToast, setShowToast] = useState(false);
@@ -23,31 +30,52 @@ const LoginForm = () => {
         setError("")
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        setShowLoading(true)
-        await signIn("credentials", {
-            email,
-            password,
-            redirect: false
-        })
-            .then(response => {
-                if (response.error)
-                    setError(JSON.parse(response.error).message)
-                else {
-                    clearInputs()
-                    router.push('/')
-                }
-                clearInputs()
+    const onSubmit = async (e: SyntheticEvent) => {
+        try {
+            e.preventDefault()
+            // console.log(email)
+            // console.log(password)
+            // return;
+            setShowLoading(true)
+            const result = await login(email, password);
+            const tokenUser = result.data as TokenUser;
 
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            .finally(() => {
-                setShowLoading(true)
-            })
-    }
+            localStorage.setItem("session", JSON.stringify(tokenUser));
+            console.log(tokenUser)
+            setShowLoading(false);
+
+            router.push('/')
+        } catch (error) {
+            setShowLoading(false);
+            console.log("login error", error);
+        }
+    };
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault()
+    //     setShowLoading(true)
+    //
+    //     await signIn("credentials", {
+    //         email,
+    //         password,
+    //         redirect: false
+    //     })
+    //         .then(response => {
+    //             if (response.error)
+    //                 setError(JSON.parse(response.error).message)
+    //             else {
+    //                 clearInputs()
+    //                 router.push('/')
+    //             }
+    //             clearInputs()
+    //
+    //         })
+    //         .catch(error => {
+    //             console.log(error)
+    //         })
+    //         .finally(() => {
+    //             setShowLoading(true)
+    //         })
+    // }
 
     return (
         <div className="flex items-center justify-center px-6 sm:h-screen lg:h-screen lg:gap-y-6 bg-secondary-900">
@@ -92,7 +120,7 @@ const LoginForm = () => {
                         </a>
                     </div>
                     <div className="flex flex-col items-center pb-10">
-                        <Button type={'submit'}
+                        <Button onClick={(e) => onSubmit(e)}
                                 className="w-full text-xs font-medium text-center text-white bg-primary-900 rounded-lg hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30">
                             {showLoading && <Spinner aria-label="Spinner button example" size="sm"/>}
                             Sign in
