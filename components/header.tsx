@@ -4,13 +4,16 @@ import {Navbar} from "flowbite-react";
 import {BiChevronRightCircle} from "react-icons/bi";
 import {useSidebarContext} from "@/app/context/SidebarContext";
 
-const Header: FC<Record<string, never>> = function () {
+const Header: React.FC<{ title: string, }> = ({title}) => {
+
     const {isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens} = useSidebarContext();
     const [isSmall, setIsSmall] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
+    console.log(title)
     useEffect(() => {
         function handleResize() {
             setIsSmall(typeof window !== 'undefined' && window.innerWidth < 768);
         }
+
         if (typeof window !== 'undefined') {
             window.addEventListener("resize", handleResize);
             return () => {
@@ -31,12 +34,14 @@ const Header: FC<Record<string, never>> = function () {
 
                     >
                         {isOpenOnSmallScreens ? (
-                            <BiChevronRightCircle />
+                            <BiChevronRightCircle/>
                         ) : (
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
                                 <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" fill="white"/>
                                 <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" stroke="#F1F2F2"/>
-                                <path d="M14 16L10 12L14 8" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M14 16L10 12L14 8" stroke="black" strokeWidth="1.5" strokeLinecap="round"
+                                      strokeLinejoin="round"/>
                             </svg>
                         )}
                     </button>
@@ -45,13 +50,28 @@ const Header: FC<Record<string, never>> = function () {
                     {
                         !isSmall && (
                             <button
-                                style={{ marginLeft: '-30px' }}
+                                style={{marginLeft: '-30px'}}
                                 onClick={() => setOpenOnSmallScreens(!isOpenOnSmallScreens)}>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" fill="white"/>
-                                    <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" stroke="#F1F2F2"/>
-                                    <path d="M14 16L10 12L14 8" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
+
+                                {isOpenOnSmallScreens ? (
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" fill="white"/>
+                                        <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" stroke="#F1F2F2"/>
+                                        <path d="M10 16L14 12L10 8" stroke="black" strokeWidth="1.5" strokeLinecap="round"
+                                              strokeLinejoin="round"/>
+                                    </svg>
+
+
+                                ) : (
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" fill="white"/>
+                                        <rect x="0.5" y="0.5" width="23" height="23" rx="11.5" stroke="#F1F2F2"/>
+                                        <path d="M14 16L10 12L14 8" stroke="black" strokeWidth="1.5" strokeLinecap="round"
+                                              strokeLinejoin="round"/>
+                                    </svg>
+                                )}
 
                             </button>
                         )
@@ -59,7 +79,7 @@ const Header: FC<Record<string, never>> = function () {
                     }
 
                     <span className="self-center whitespace-nowrap px-5 text-xl font-semibold dark:text-white">
-                        Home
+                        {title ? title : 'Home'}
                     </span>
                 </Navbar.Brand>
                 {/*      <div className="flex md:order-2">*/}

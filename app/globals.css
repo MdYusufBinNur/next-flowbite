@@ -25,3 +25,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+.sidebar {
+    transition: transform 0.3s ease-in-out; /* Adjust the duration and easing as needed */
+}
+
+.sidebar-closed {
+    transform: translateX(-100%);
+}

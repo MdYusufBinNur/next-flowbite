@@ -1,112 +1,131 @@
-"use client";
-import React, {useState} from "react";
-import { Avatar } from 'flowbite-react';
-import logo from '@/public/static/logo.png'
-import {
-    HiArrowSmRight,
-    HiChartPie,
-    HiEye,
-    HiInbox,
-    HiShoppingBag,
-    HiTable,
-    HiUser,
-    HiViewBoards,
-} from "react-icons/hi";
+'use client'
+import React, {useEffect, useState} from "react";
+import {getLocalSession} from "@/components/api/localStorage/utils";
+import {useRouter} from "next/navigation";
 import Header from "@/components/header";
+import {SidebarProvider} from "@/app/context/SidebarContext";
 import Sidebar from "@/components/sidebar";
-import {SidebarProvider} from "./context/SidebarContext";
-import {AlertFunction} from "@/components/Alert";
+import {HiArrowSmRight, HiChartPie, HiShoppingBag, HiTable, HiOutlineHome, HiAdjustments,} from "react-icons/hi";
+import {HiOutlineMegaphone, HiArrowRightOnRectangle} from "react-icons/hi2";
+import {MdOutlinePhotoLibrary} from "react-icons/md";
+import {TbUserSquare} from "react-icons/tb";
+import {FiLogOut} from "react-icons/fi";
 import Link from "next/link";
-import AdminLayout from "@/components/layouts/adminLayout";
 
-type ChildProps =  {
+interface ChildProps {
     children: React.ReactNode;
 }
-const Index: React.FC<ChildProps> = ({ children }) => {
+
+
+const MainLayout: React.FC<ChildProps> = ({children}) => {
+    // const [localeSession, setLocalSession] = useState()
+    // const router = useRouter()
+    // useEffect(() => {
+    //     console.log(getLocalSession())
+    //     getLocalSession() === null && router.push("/login");
+    // }, [router]);
+    const [activeItem, setActiveItem] = useState('');
+
+    const handleActiveItemChange = (item: string) => {
+        // Handle the state change in the MainLayout component
+        setActiveItem(item);
+        //console.log(item); // Log the activeItem value to the console
+    };
     return (
-        <AdminLayout>
+        <SidebarProvider>
             <div className="flex">
                 <div className="order-1">
-                    <ActualSidebar/>
+                    <ActualSidebar activeItem={activeItem} setActiveItem={setActiveItem}
+                                   onActiveItemChange={handleActiveItemChange}/>
                 </div>
                 <div className={'order-2'}>
-                    <Header />
+                    <Header title={activeItem}/>
                     <main className="order-2 mx-4 mt-4 mb-24 flex-[1_0_16rem]">
-                        <HomePage/>
+                        {children}
                     </main>
                 </div>
 
             </div>
-        </AdminLayout>
+        </SidebarProvider>
     );
-}
+};
 
-export function ActualSidebar(): JSX.Element {
+// ActualSidebar component
+const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: string) => void }> = ({
+                                                                                                         activeItem,
+                                                                                                         onActiveItemChange
+}) => {
+    const handleItemClick = (item) => {
+        onActiveItemChange(item);
+    };
     return (
         <Sidebar aria-label="Sidebar with multi-level dropdown example">
-
-            <Sidebar.Items>
-               <Sidebar.Logo>
-                   <img
-                       alt=""
-                       src="/static/logo.png"
-                       className="mr-1 h-6 w-full sm:h-8 text-center justify-center"
-                   />
-               </Sidebar.Logo>
+            <div className="flex h-full flex-col">
+                <Sidebar.Logo className={'justify-center'}>
+                    <img
+                        alt=""
+                        src="/static/logo.svg"
+                        className="mr-1 w-full sm:h-12 text-center justify-center"
+                    />
+                </Sidebar.Logo>
                 <Sidebar.ItemGroup>
-                    <Sidebar.Item href="#" icon={HiChartPie}>
-                        Dashboard
+                    <Sidebar.Item
+                        onClick={() => handleItemClick('/')}
+                        href="/"
+                        as={Link}
+                        icon={HiOutlineHome}
+                        className="p-4"
+                    >
+                        Home
                     </Sidebar.Item>
-                    <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
-                        <Sidebar.Item href="#">Products</Sidebar.Item>
-                        <Sidebar.Item href="#">Sales</Sidebar.Item>
-                        <Sidebar.Item href="#">Refunds</Sidebar.Item>
-                        <Sidebar.Item href="#">Shipping</Sidebar.Item>
-                    </Sidebar.Collapse>
-                    <Sidebar.Item href="#" icon={HiInbox}>
-                        Inbox
+                    <Sidebar.Item
+                        onClick={() => handleItemClick('admin')}
+                        href="/admin"
+                        as={Link}
+                        icon={TbUserSquare}
+                        className='p-4'
+                    >
+                        Admin
                     </Sidebar.Item>
-                    <Sidebar.Item href="#" icon={HiUser}>
-                        Users
+                    <Sidebar.Item
+                        icon={MdOutlinePhotoLibrary}
+                        href="#"
+                        className='p-4'
+                    >
+                        gallery
                     </Sidebar.Item>
-                    <Sidebar.Item href="#" icon={HiShoppingBag}>
-                        Products
+                    {/*<Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">*/}
+                    {/*    <Sidebar.Item href="#">Products</Sidebar.Item>*/}
+                    {/*    <Sidebar.Item href="#">Sales</Sidebar.Item>*/}
+                    {/*    <Sidebar.Item href="#">Refunds</Sidebar.Item>*/}
+                    {/*    <Sidebar.Item href="#">Shipping</Sidebar.Item>*/}
+                    {/*</Sidebar.Collapse>*/}
+                    {/* ... (other sidebar items) */}
+                    <Sidebar.Item
+                        icon={HiOutlineMegaphone}
+                        href=""
+                        className="p-4"
+                    >
+                        Advertisement
                     </Sidebar.Item>
-                    <Sidebar.Item icon={HiArrowSmRight} href="/login">
-                        Sign In
-                    </Sidebar.Item>
-                    <Sidebar.Item icon={HiTable} href="/signup">
-                        Sign Up
+
+                </Sidebar.ItemGroup>
+            </div>
+            <div className="flex">
+                <Sidebar.ItemGroup>
+                    <Sidebar.Item
+                        onClick={() => handleItemClick('/')}
+                        href="#"
+                        as={Link}
+                        icon={FiLogOut}
+                        className="p-4"
+                    >
+                        Logout
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
-            </Sidebar.Items>
+
+            </div>
         </Sidebar>
     );
-}
-
-function HomePage() {
-    return (
-        <div className="p-6">
-            <section>
-                <header>
-                    <h1 className="mb-6 text-5xl font-extrabold dark:text-white">
-                        Welcome to <code>Flowbite</code> on <code>Next.js</code>!
-                    </h1>
-                </header>
-            </section>
-            <section>
-                <header>
-                    <h2 className="mb-3 text-4xl font-bold dark:text-gray-200">Alert</h2>
-                </header>
-                <img
-                    alt=""
-                    src="../public/next.svg"
-                    className="mr-1 h-6 sm:h-8"
-                />
-                <AlertFunction/>
-            </section>
-        </div>
-    );
-}
-
-export  default Index
+};
+export default MainLayout;
