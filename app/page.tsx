@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {getLocalSession} from "@/components/api/localStorage/utils";
 import {useRouter} from "next/navigation";
 import Header from "@/components/header";
@@ -12,25 +12,25 @@ import {TbUserSquare} from "react-icons/tb";
 import {FiLogOut} from "react-icons/fi";
 import Link from "next/link";
 
-interface ChildProps {
-    children: React.ReactNode;
-}
+// interface ChildProps {
+//     children: React.ReactNode;
+// }
 
-
-const MainLayout: React.FC<ChildProps> = ({children}) => {
-    // const [localeSession, setLocalSession] = useState()
-    // const router = useRouter()
-    // useEffect(() => {
-    //     console.log(getLocalSession())
-    //     getLocalSession() === null && router.push("/login");
-    // }, [router]);
+export default function MainLayout({children} : {children:ReactNode}) {
+// const MainLayout: React.FC<ChildProps> = ({children}) => {
+    const router = useRouter()
+    const session = getLocalSession()
+    useEffect(() => {
+        getLocalSession() === null && router.push("/login");
+    }, [router]);
     const [activeItem, setActiveItem] = useState('');
 
     const handleActiveItemChange = (item: string) => {
-        // Handle the state change in the MainLayout component
         setActiveItem(item);
-        //console.log(item); // Log the activeItem value to the console
     };
+    if (session === null) {
+        return null;
+    }
     return (
         <SidebarProvider>
             <div className="flex">
@@ -59,9 +59,9 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
         onActiveItemChange(item);
     };
     return (
-        <Sidebar aria-label="Sidebar with multi-level dropdown example">
-            <div className="flex h-full flex-col">
-                <Sidebar.Logo className={'justify-center'}>
+        <Sidebar aria-label="Sidebar">
+            <div className="flex h-[calc(100vh-5rem)] flex-col">
+                <Sidebar.Logo className={'justify-center mb-0'}>
                     <img
                         alt=""
                         src="/static/logo.svg"
@@ -70,8 +70,8 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
                 </Sidebar.Logo>
                 <Sidebar.ItemGroup>
                     <Sidebar.Item
-                        onClick={() => handleItemClick('/')}
-                        href="/"
+                        onClick={() => handleItemClick('Home')}
+                        href="/dashboard"
                         as={Link}
                         icon={HiOutlineHome}
                         className="p-4"
@@ -79,13 +79,13 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
                         Home
                     </Sidebar.Item>
                     <Sidebar.Item
-                        onClick={() => handleItemClick('admin')}
+                        onClick={() => handleItemClick('Admin')}
                         href="/admin"
                         as={Link}
                         icon={TbUserSquare}
                         className='p-4'
                     >
-                        Admin
+                        Profile
                     </Sidebar.Item>
                     <Sidebar.Item
                         icon={MdOutlinePhotoLibrary}
@@ -128,4 +128,3 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
         </Sidebar>
     );
 };
-export default MainLayout;

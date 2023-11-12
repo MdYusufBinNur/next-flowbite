@@ -11,23 +11,25 @@ import Link from "next/link";
 import {redirect} from "next/navigation";
 
 import {useRouter} from "next/navigation";
+import Toaster from "@/components/common/Toast";
 
 const LoginForm = () => {
     const router = useRouter();
-    let loading = false
     const [showLoading, setShowLoading] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
+    const [error, setError] = useState(false)
 
     const handleEmailChange = e => setEmail(e.target.value)
     const handlePasswordChange = e => setPassword(e.target.value)
-
+    setTimeout(() => {
+        setError(false);
+    }, 3000);
     const clearInputs = () => {
         setEmail("")
         setPassword("")
-        setError("")
+        setError(false)
     }
 
     const onSubmit = async (e: SyntheticEvent) => {
@@ -36,20 +38,20 @@ const LoginForm = () => {
             // console.log(email)
             // console.log(password)
             // return;
+
             setShowLoading(true)
             const result = await login(email, password);
             const tokenUser = result.data as TokenUser;
-
             localStorage.setItem("session", JSON.stringify(tokenUser));
             console.log(tokenUser)
             setShowLoading(false);
-
-            router.push('/')
+            router.push('/dashboard')
         } catch (error) {
             setShowLoading(false);
-            console.log("login error", error);
+            setError(error.response.data.message ? error.response.data.message : 'An error occurred.')
         }
     };
+
     // const handleSubmit = async (e) => {
     //     e.preventDefault()
     //     setShowLoading(true)
@@ -121,9 +123,9 @@ const LoginForm = () => {
                     </div>
                     <div className="flex flex-col items-center pb-10">
                         <Button onClick={(e) => onSubmit(e)}
-                                className="w-full text-xs font-medium text-center text-white bg-primary-900 rounded-lg hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30">
-                            {showLoading && <Spinner aria-label="Spinner button example" size="sm"/>}
-                            Sign in
+                                className="w-full text-xs font-medium text-center text-white bg-primary-900 rounded-lg hover:bg-[#050708]/90  focus:outline-none font-medium rounded-lg text-sm text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30">
+                            {showLoading ? <Spinner aria-label="Spinner button" color="success" size="md"/> : ' Sign in'}
+
                         </Button>
                     </div>
                     <p className="text-sm text-gray-500 dark:text-gray-300">
@@ -134,13 +136,9 @@ const LoginForm = () => {
                     </p>
 
                 </form>
-                {showToast && (
-                    <Toast>
-                        <div className="ml-3 text-sm font-normal">Message</div>
-                        <Toast.Toggle onDismiss={() => setShowToast(false)}/>
-                    </Toast>
-                )}
+
             </Card>
+            {error && <Toaster duration={2000} children={error}/>}
         </div>
     )
 }
