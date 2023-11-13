@@ -8,7 +8,6 @@ const Header: React.FC<{ title: string, }> = ({title}) => {
 
     const {isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens} = useSidebarContext();
     const [isSmall, setIsSmall] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
-    console.log(title)
     useEffect(() => {
         function handleResize() {
             setIsSmall(typeof window !== 'undefined' && window.innerWidth < 768);

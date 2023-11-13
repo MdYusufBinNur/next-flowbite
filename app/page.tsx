@@ -12,19 +12,20 @@ import {TbUserSquare} from "react-icons/tb";
 import {FiLogOut} from "react-icons/fi";
 import Link from "next/link";
 import {router} from "next/client";
+import {useSession, signOut} from "next-auth/react";
 
 // interface ChildProps {
 //     children: React.ReactNode;
 // }
 
 export default function MainLayout({children}: { children: ReactNode }) {
-// const MainLayout: React.FC<ChildProps> = ({children}) => {
     const router = useRouter()
-    const session = getLocalSession()
-    useEffect(() => {
-        getLocalSession() === null && router.push("/login");
-    }, [router]);
+//     const session = getLocalSession()
+//     useEffect(() => {
+//         getLocalSession() === null && router.push("/login");
+//     }, [router]);
     const [activeItem, setActiveItem] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
     const handleLogout = () => {
         router.push('/login')
         removeLocalSession()
@@ -32,11 +33,22 @@ export default function MainLayout({children}: { children: ReactNode }) {
     const handleActiveItemChange = (item: string) => {
         setActiveItem(item);
     };
-    if (session === null) {
-        return null;
+//     if (session === null) {
+//         return null;
+//     }
+
+    const {status} = useSession();
+    const isLoggedIn = status === 'authenticated';
+    if (isLoggedIn) {
+        setLoggedIn(true)
     }
+    if (!isLoggedIn){
+        router.push('/login')
+        return null
+    }
+
     return (
-        <SidebarProvider>
+        loggedIn && <SidebarProvider>
             <div className="flex">
                 <div className="order-1">
                     <ActualSidebar
@@ -53,11 +65,16 @@ export default function MainLayout({children}: { children: ReactNode }) {
 
             </div>
         </SidebarProvider>
+
     );
 };
 
 // ActualSidebar component
-const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: string) => void, onLogoutButtonClick: () => void }> = ({activeItem, onActiveItemChange, onLogoutButtonClick}) => {
+const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: string) => void, onLogoutButtonClick: () => void }> = ({
+                                                                                                                                          activeItem,
+                                                                                                                                          onActiveItemChange,
+                                                                                                                                          onLogoutButtonClick
+                                                                                                                                      }) => {
     const handleItemClick = (item) => {
         onActiveItemChange(item);
     };
@@ -123,7 +140,7 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
             <div className="flex">
                 <Sidebar.ItemGroup>
                     <Sidebar.Item
-                        onClick={() => logOutButtonClick()}
+                        onClick={() => signOut}
                         href="/login"
                         as={Link}
                         icon={FiLogOut}

@@ -6,13 +6,13 @@ import { redirect } from "next/navigation";
 export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: "Credentials",
       credentials: {
         email: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credential) {
-        const res = await fetch(`${process.env.NEXTAPI_URL}/api/v1/login`, {
+        const res = await fetch(`${process.env.NEXTAPI_URL}/login`, {
           method: "POST",
           headers: { 
             "Content-type": "application/json",
@@ -22,20 +22,11 @@ export const options: NextAuthOptions = {
           credentials:"include",
           body: JSON.stringify(credential),
         });
-       // console.log(res.headers)
-       // cookies().set('jwt', 'dafadsf');
 
         const data = await res.json();
-       console.log(data);
-        if(!data.success){
-         return null;
-        }
-
-        if (data.success && data.token) {
-        cookies().set("jwt", data.token, {
-          httpOnly:true
-        });
-          return data.user;
+        if (!data.error && data.data.token) {
+        cookies().set("jwt", data.data.token);
+          return data.data.user;
         } else {
           return null;
         }
@@ -43,8 +34,8 @@ export const options: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/sign-in",
-    error:'/sing-in' 
+    signIn: "/login",
+    error:'/login'
     
   },
 };
