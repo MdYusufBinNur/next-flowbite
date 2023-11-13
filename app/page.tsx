@@ -1,22 +1,23 @@
 'use client'
 import React, {ReactNode, useEffect, useState} from "react";
-import {getLocalSession} from "@/components/api/localStorage/utils";
+import {getLocalSession, removeLocalSession} from "@/components/api/localStorage/utils";
 import {useRouter} from "next/navigation";
 import Header from "@/components/header";
 import {SidebarProvider} from "@/app/context/SidebarContext";
 import Sidebar from "@/components/sidebar";
-import {HiArrowSmRight, HiChartPie, HiShoppingBag, HiTable, HiOutlineHome, HiAdjustments,} from "react-icons/hi";
-import {HiOutlineMegaphone, HiArrowRightOnRectangle} from "react-icons/hi2";
+import {HiOutlineHome} from "react-icons/hi";
+import {HiOutlineMegaphone} from "react-icons/hi2";
 import {MdOutlinePhotoLibrary} from "react-icons/md";
 import {TbUserSquare} from "react-icons/tb";
 import {FiLogOut} from "react-icons/fi";
 import Link from "next/link";
+import {router} from "next/client";
 
 // interface ChildProps {
 //     children: React.ReactNode;
 // }
 
-export default function MainLayout({children} : {children:ReactNode}) {
+export default function MainLayout({children}: { children: ReactNode }) {
 // const MainLayout: React.FC<ChildProps> = ({children}) => {
     const router = useRouter()
     const session = getLocalSession()
@@ -24,7 +25,10 @@ export default function MainLayout({children} : {children:ReactNode}) {
         getLocalSession() === null && router.push("/login");
     }, [router]);
     const [activeItem, setActiveItem] = useState('');
-
+    const handleLogout = () => {
+        router.push('/login')
+        removeLocalSession()
+    }
     const handleActiveItemChange = (item: string) => {
         setActiveItem(item);
     };
@@ -35,8 +39,10 @@ export default function MainLayout({children} : {children:ReactNode}) {
         <SidebarProvider>
             <div className="flex">
                 <div className="order-1">
-                    <ActualSidebar activeItem={activeItem} setActiveItem={setActiveItem}
-                                   onActiveItemChange={handleActiveItemChange}/>
+                    <ActualSidebar
+                        activeItem={activeItem} setActiveItem={setActiveItem}
+                        onActiveItemChange={handleActiveItemChange}
+                        onLogoutButtonClick={handleLogout}/>
                 </div>
                 <div className={'order-2'}>
                     <Header title={activeItem}/>
@@ -51,13 +57,14 @@ export default function MainLayout({children} : {children:ReactNode}) {
 };
 
 // ActualSidebar component
-const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: string) => void }> = ({
-                                                                                                         activeItem,
-                                                                                                         onActiveItemChange
-}) => {
+const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: string) => void, onLogoutButtonClick: () => void }> = ({activeItem, onActiveItemChange, onLogoutButtonClick}) => {
     const handleItemClick = (item) => {
         onActiveItemChange(item);
     };
+
+    const logOutButtonClick = () => {
+        onLogoutButtonClick()
+    }
     return (
         <Sidebar aria-label="Sidebar">
             <div className="flex h-[calc(100vh-5rem)] flex-col">
@@ -89,7 +96,8 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
                     </Sidebar.Item>
                     <Sidebar.Item
                         icon={MdOutlinePhotoLibrary}
-                        href="#"
+                        href="/gallery"
+                        as={Link}
                         className='p-4'
                     >
                         gallery
@@ -103,8 +111,9 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
                     {/* ... (other sidebar items) */}
                     <Sidebar.Item
                         icon={HiOutlineMegaphone}
-                        href=""
+                        href="/advertisement"
                         className="p-4"
+                        as={Link}
                     >
                         Advertisement
                     </Sidebar.Item>
@@ -114,8 +123,8 @@ const ActualSidebar: React.FC<{ activeItem: string, onActiveItemChange: (item: s
             <div className="flex">
                 <Sidebar.ItemGroup>
                     <Sidebar.Item
-                        onClick={() => handleItemClick('/')}
-                        href="#"
+                        onClick={() => logOutButtonClick()}
+                        href="/login"
                         as={Link}
                         icon={FiLogOut}
                         className="p-4"

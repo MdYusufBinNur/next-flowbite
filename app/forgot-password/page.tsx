@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
                         </div>
                     </div>
                     <div className="flex flex-col items-center pb-10">
-                        <Button href="/verify"
+                        <Button href="#"
                                 className="w-full text-xs font-medium text-center text-white bg-primary-900 rounded-lg hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30">
                             Reset Password
                         </Button>

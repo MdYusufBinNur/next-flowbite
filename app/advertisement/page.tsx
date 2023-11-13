@@ -2,14 +2,14 @@
 import React, {FC} from "react";
 import MainLayout from "@/app/page";
 
-const DashboardPage: FC = function () {
+const AdvertisementPage: FC = function () {
     return (
         <MainLayout>
             <div className="p-6">
                 <section>
                     <header>
-                        <h1 className="mb-6 text-5xl font-extrabold dark:text-white text-center justify-center">
-                            Welcome to <code>BrollopsGuiden</code> Dashboard
+                        <h1 className="mb-6 text-5xl font-extrabold dark:text-white">
+                            Advertisement section
                         </h1>
                     </header>
                 </section>
@@ -18,4 +18,4 @@ const DashboardPage: FC = function () {
         </MainLayout>
     )
 }
-export default DashboardPage
+export default AdvertisementPage
