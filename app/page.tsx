@@ -1,6 +1,6 @@
 'use client'
 import React, {ReactNode, useEffect, useState} from "react";
-import {getLocalSession, removeLocalSession} from "@/components/api/localStorage/utils";
+import {removeLocalSession} from "@/components/api/localStorage/utils";
 import {useRouter} from "next/navigation";
 import Header from "@/components/header";
 import {SidebarProvider} from "@/app/context/SidebarContext";
@@ -11,8 +11,8 @@ import {MdOutlinePhotoLibrary} from "react-icons/md";
 import {TbUserSquare} from "react-icons/tb";
 import {FiLogOut} from "react-icons/fi";
 import Link from "next/link";
-import {router} from "next/client";
 import {useSession, signOut} from "next-auth/react";
+import LoginForm from "@/components/Auth/LoginComponent";
 
 // interface ChildProps {
 //     children: React.ReactNode;
@@ -20,12 +20,7 @@ import {useSession, signOut} from "next-auth/react";
 
 export default function MainLayout({children}: { children: ReactNode }) {
     const router = useRouter()
-//     const session = getLocalSession()
-//     useEffect(() => {
-//         getLocalSession() === null && router.push("/login");
-//     }, [router]);
     const [activeItem, setActiveItem] = useState('');
-    const [loggedIn, setLoggedIn] = useState(false);
     const handleLogout = () => {
         router.push('/login')
         removeLocalSession()
@@ -33,38 +28,36 @@ export default function MainLayout({children}: { children: ReactNode }) {
     const handleActiveItemChange = (item: string) => {
         setActiveItem(item);
     };
-//     if (session === null) {
-//         return null;
-//     }
-
     const {status} = useSession();
     const isLoggedIn = status === 'authenticated';
-    if (isLoggedIn) {
-        setLoggedIn(true)
-    }
-    if (!isLoggedIn){
-        router.push('/login')
-        return null
-    }
-
+    console.log('Page : ',isLoggedIn)
     return (
-        loggedIn && <SidebarProvider>
-            <div className="flex">
-                <div className="order-1">
-                    <ActualSidebar
-                        activeItem={activeItem} setActiveItem={setActiveItem}
-                        onActiveItemChange={handleActiveItemChange}
-                        onLogoutButtonClick={handleLogout}/>
-                </div>
-                <div className={'order-2'}>
-                    <Header title={activeItem}/>
-                    <main className="order-2 mx-4 mt-4 mb-24 flex-[1_0_16rem]">
-                        {children}
-                    </main>
-                </div>
+        <div>
+            {
+                isLoggedIn &&
+                <SidebarProvider>
+                    <div className="flex">
+                        <div className="order-1">
+                            <ActualSidebar
+                                activeItem={activeItem}
+                                onActiveItemChange={handleActiveItemChange}
+                                onLogoutButtonClick={handleLogout}/>
+                        </div>
+                        <div className={'order-2'}>
+                            <Header title='home'/>
+                            <main className="order-2 mx-4 mt-4 mb-24 flex-[1_0_16rem]">
+                                {children}
+                            </main>
+                        </div>
+                    </div>
+                </SidebarProvider>
+            }
+            {
+                !isLoggedIn && <LoginForm/>
+            }
 
-            </div>
-        </SidebarProvider>
+        </div>
+
 
     );
 };

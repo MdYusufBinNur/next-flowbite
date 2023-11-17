@@ -4,7 +4,7 @@ const config: Config = {
   content: [
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
-    "./node_modules/flowbite-react/**/*.js",
+    './node_modules/flowbite-react/**/*.js',
   ],
   theme: {
     colors: {

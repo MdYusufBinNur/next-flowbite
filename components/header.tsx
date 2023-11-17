@@ -81,16 +81,6 @@ const Header: React.FC<{ title: string, }> = ({title}) => {
                         {title ? title : 'Home'}
                     </span>
                 </Navbar.Brand>
-                {/*      <div className="flex md:order-2">*/}
-                {/*          <Navbar.Brand>*/}
-                {/*              <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">*/}
-                {/*  Home*/}
-                {/*</span>*/}
-                {/*              <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">*/}
-                {/*                  Home*/}
-                {/*              </span>*/}
-                {/*          </Navbar.Brand>*/}
-                {/*      </div>*/}
             </Navbar>
         </header>
     );

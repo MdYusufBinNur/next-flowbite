@@ -43,7 +43,6 @@ const LoginForm = () => {
             const result = await login(email, password);
             const tokenUser = result.data as TokenUser;
             localStorage.setItem("session", JSON.stringify(tokenUser));
-            console.log(tokenUser)
             setShowLoading(false);
             router.push('/dashboard')
         } catch (error) {

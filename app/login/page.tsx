@@ -1,11 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 'use client'
 import {Button, Card, Checkbox, Label, Spinner, TextInput} from "flowbite-react";
-import {useEffect, useState, SyntheticEvent} from "react";
+import {useState, SyntheticEvent} from "react";
 import type {FC} from "react";
-import Link from 'next/link'
 import {signIn} from "next-auth/react";
-import {useRouter} from "next/navigation";
 
 type props = {
     searchParams?: Record<"callbackUrl" | "error", string>
@@ -14,22 +12,16 @@ type props = {
 const SignInPage: FC = function (props: props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const router = useRouter();
     const [showLoading, setShowLoading] = useState(false);
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
         setShowLoading(true)
-        const login = await signIn("credentials", {
+        await signIn("credentials", {
             email,
             password,
             redirect: true,
             callbackUrl: '/dashboard',
-        }).then((error: any) => {
-            console.log('then', error)
-        }).catch((error: any) => {
-            console.log('catch', error);
-        });
-
+        })
     }
 
     return (
