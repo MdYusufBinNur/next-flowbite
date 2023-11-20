@@ -36,16 +36,16 @@ export default function MainLayout({children}: { children: ReactNode }) {
             {
                 isLoggedIn &&
                 <SidebarProvider>
-                    <div className="flex">
-                        <div className="order-1">
+                    <div className={'flex'}>
+                        <div className="flex-none">
                             <ActualSidebar
                                 activeItem={activeItem}
                                 onActiveItemChange={handleActiveItemChange}
                                 onLogoutButtonClick={handleLogout}/>
                         </div>
-                        <div className={'order-2'}>
+                        <div className="flex-auto">
                             <Header title='home'/>
-                            <main className="order-2 mx-4 mt-4 mb-24 flex-[1_0_16rem]">
+                            <main className="mx-4 mt-4 mb-24 flex-[1_0_16rem] w-[calc(100%-2rem)]]">
                                 {children}
                             </main>
                         </div>

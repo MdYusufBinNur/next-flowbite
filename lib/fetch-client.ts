@@ -10,14 +10,14 @@ interface fetchClientProps {
 async function fetchClient({ method = "GET", url, body = "", token }: fetchClientProps) {
   try {
     const session = await getSession();
-    const accessToken = token || session?.accessToken;
+    const accessToken = token || session?.token;
 
     const response = await fetch(url.toString(), {
       method: method,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer" + accessToken,
+        Authorization: "Bearer " + accessToken,
       },
       body: body || undefined,
     });
@@ -30,9 +30,8 @@ async function fetchClient({ method = "GET", url, body = "", token }: fetchClien
   } catch (error) {
     if (error instanceof Response) {
       if (error.status === 401) {
-        signOut();
+        await signOut();
       }
-
       if (error.status === 409) {
         window.location.href = "/request-email-verification";
       }

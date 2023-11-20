@@ -6,7 +6,7 @@ import {JWT} from "next-auth/jwt";
 export const options: NextAuthOptions = {
     pages: {
         signIn: "/login",
-        error: '/login'
+
 
     },
     session: {
@@ -111,7 +111,7 @@ export const options: NextAuthOptions = {
     },
     events: {
         async signOut({token}) {
-            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/logout`,{
+            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/signout`,{
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",
